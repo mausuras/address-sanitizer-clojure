@@ -22,6 +22,13 @@
   (:body
     (client/get (build-url address) {:as :json})))
 
+(defn result-or-fallback
+  [line]
+  (let [address (get-post line)]
+    (if (empty? address)
+      (into [] {:fallback line})
+      address)))
+
 (defn get-full-address
   [piece]
   (map get-post piece))
@@ -49,7 +56,7 @@
   [chunk output-format]
   (write-csv "/tmp/results.csv"
    (flatten-to-vector (get-partial-address (get-full-address chunk) output-format))
-   [:display_name]))
+   output-format))
 
 (defn load-data
   [file size output-format]
