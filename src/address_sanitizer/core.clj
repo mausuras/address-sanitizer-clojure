@@ -25,13 +25,14 @@
 (defn result-or-fallback
   [line]
   (let [address (get-post line)]
-    (if (empty? address)
-      (into [] {:fallback line})
-      address)))
+    (if-not (empty? line)
+      (if (empty? address)
+        [{:fallback line}]
+        address))))
 
 (defn get-full-address
   [piece]
-  (map get-post piece))
+  (map result-or-fallback piece))
 
 (defn get-partial-address
   [addresses keys]
@@ -39,34 +40,51 @@
     (for [map list]
       (select-keys map keys))))
 
+(defn nil-to-empty
+  [data]
+  (map (fn [m]
+         (into [] 
+               (map (fn [v]
+                      (if (nil? v) "" v)) m)))
+       data))
+
 (defn write-csv
   [path row-data key-vector ]
   (let [columns key-vector
         headers (map name columns)
-        rows (mapv #(mapv % columns) row-data)]
+        rows (mapv #(mapv % columns) row-data)
+        output (nil-to-empty (cons headers rows))]
     (with-open [file (io/writer path :append true)]
-      (csv/write-csv file (cons headers rows)))))
+      (csv/write-csv file output))))
+
 
 (defn flatten-to-vector
   [nested-list]
   (into []
         (flatten nested-list)))
 
+
 (defn process-chunk
-  [chunk output-format]
-  (write-csv "/tmp/results.csv"
+  [chunk output-format out-file]
+  (write-csv out-file
    (flatten-to-vector (get-partial-address (get-full-address chunk) output-format))
    output-format))
 
 (defn load-data
-  [file size output-format]
+  [file size output-format out-file]
   (with-open [rdr (clojure.java.io/reader file)]
     (doseq [chunk (partition-all size (line-seq rdr))]
-      (process-chunk chunk output-format))))
+      (process-chunk chunk output-format out-file))))
+
+(defn string-to-keywords
+  [string]
+  (into []
+        (map keyword (clojure.string/split string #"\s+"))))
+
 
 (defn -main [& args]
   (let [{:keys [file options exit-message ok?]} (interface/validate-args args)]
     (if exit-message
       (interface/exit (if ok? 0 1) exit-message)
-      (load-data file (:chunk options) [:display_name]))))
+      (load-data file (:chunk options) (string-to-keywords(:format options)) (:output options)))))
 

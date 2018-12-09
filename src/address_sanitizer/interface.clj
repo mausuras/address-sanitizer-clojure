@@ -5,9 +5,14 @@
 (def cli-options 
   ;; An option with a required argument
   [["-c" "--chunk CHUNK_SIZE" "Chunk size"
-    :default 10
+    :default 100
     :parse-fn #(Integer/parseInt %)
     :validate [#(< 0 %) "Must be a positive number"]]
+   ["-o" "--output FILE_PATH" "Output file"
+    :default "/tmp/results.csv"]
+    ;; :validate (not (.exists #(io/file %)))]
+   ["-f" "--format OUTPUT_FORMAT" "Output format"
+    :default "display_name"]
    ;; A boolean option defaulting to nil
    ["-h" "--help"]])
 
