@@ -1,5 +1,5 @@
 # address-sanitizer-clojure
-Tool so sanitize addresses written in Clojure.
+Cli tool so sanitize addresses written in Clojure.
 
 This is my first project using Clojure.
 
