@@ -94,7 +94,7 @@
   "Reads a file with unstructured addresses and creates a csv file with structured addresses following an output format.
    The output format are the desired keys from the supported fields of Nomatim OSM API https://wiki.openstreetmap.org/wiki/Nominatim"
   [file chunk-size output-format out-file]
-  (io/delete-file out-file)
+  (io/delete-file out-file true)
   (with-open [rdr (clojure.java.io/reader file)]
     (doseq [chunk (partition-all chunk-size (line-seq rdr))]
       (process-chunk chunk output-format out-file)
