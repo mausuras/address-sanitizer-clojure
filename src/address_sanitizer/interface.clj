@@ -1,8 +1,9 @@
 (ns address-sanitizer.interface
   (:require [clojure.tools.cli :refer [parse-opts]]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io]
+            [clojure.string :as string]))
 
-(def cli-options 
+(def cli-options
   ;; An option with a required argument
   [["-c" "--chunk CHUNK_SIZE" "Chunk size"
     :default 100
@@ -21,11 +22,11 @@
         ""
         "Options:"
         options-summary]
-       (clojure.string/join \newline)))
+       (string/join \newline)))
 
 (defn error-msg [errors]
   (str "The following errors occurred while parsing your command:\n\n"
-       (clojure.string/join \newline errors)))
+       (string/join \newline errors)))
 
 (defn validate-args
   "Validate command line arguments. Either return a map indicating the program
@@ -40,7 +41,7 @@
       {:exit-message (error-msg errors)}
       ;; custom validation on arguments
       (and (= 1 (count arguments))
-      (.exists (io/file (first arguments))))
+           (.exists (io/file (first arguments))))
       {:file (first arguments) :options options}
       :else ; failed custom validation => exit with usage summary
       {:exit-message (usage summary)})))

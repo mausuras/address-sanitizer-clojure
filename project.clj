@@ -1,5 +1,5 @@
 (defproject address-sanitizer-clojure "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
+  :description "Cli tool to sanitize and enrich addresses"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}

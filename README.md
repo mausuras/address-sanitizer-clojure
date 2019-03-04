@@ -1,8 +1,6 @@
 # address-sanitizer-clojure
 Cli tool so sanitize addresses written in Clojure.
 
-This is my first project using Clojure.
-
 # Problem
 Addresses have a clear structure that can be more or less detailed. It is very simple to model an address in a relational database but very often you get a CSV with infromation about companies or people including addresses that dont come correctly formated.
 
@@ -41,9 +39,13 @@ java -jar target/address-sanitizer-clojure-0.1.0-SNAPSHOT-standalone.jar
 Usage: program-name [options] filepath
 
 Options:
-  -c, --chunk CHUNK_SIZE  10  Chunk size
+  -c, --chunk CHUNK_SIZE      100               Chunk size
+  -o, --output FILE_PATH      /tmp/results.csv  Output file
+  -f, --format OUTPUT_FORMAT  display_name      Output format
   -h, --help
 
+Example:
+java -jar target/address-sanitizer-clojure-0.1.0-SNAPSHOT-standalone.jar dummy_data/address_list.txt -c 6 -o /tmp/results.csv -f 'display_name lat lon fallback'
 ```
 
 ## License
