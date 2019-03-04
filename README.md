@@ -81,7 +81,7 @@ The several options for the output format can be found at:
 
 ### Video
 
-[![asciicast](https://asciinema.org/a/lt80EQWjYLVqMK9tIsKYsqI1f)](https://asciinema.org/a/lt80EQWjYLVqMK9tIsKYsqI1f)
+[![asciicast](https://asciinema.org/a/14.png)](https://asciinema.org/a/lt80EQWjYLVqMK9tIsKYsqI1f)
 
 
 ## License
