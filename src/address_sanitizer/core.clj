@@ -53,8 +53,8 @@
   "Returns the enriched address with the 'address' nested object merged into the root
   If no address is found than it will fallback to the original input"
   [line]
-  (if-not (empty? line)
-    (let [address (fetch-osm-results line)]
+  (if-not (str/blank? line)
+  (let [address (fetch-osm-results line)]
       (if address
         (dissoc (merge address (:address address)) :address)
         {:fallback line}))))
