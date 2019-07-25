@@ -6,7 +6,7 @@ Cli tool to sanitize and enrich addresses written in Clojure.
 Addresses have a clear structure that can be more or less detailed. It is simple to model an address in a relational database, but very often you get a CSV with infromation about companies or people including addresses that are not correctly formatted. 
 
 Unlike email addresses and phone numbers, addresses cannot easly be parsed or validated though regex.
-In addition people make typos, abreviate some words and only include part of the addres, turning something like
+In addition people make typos, abbreviate some words and only include part of the addres, turning something like
 
 ```
 Geissbergstrasse 3, 8302 Kloten Zurich CH
