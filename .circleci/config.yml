@@ -1,11 +1,5 @@
 version: 2.1
 
-# Define pipeline parameters at the top level
-parameters:
-  run_endpoint:
-    type: boolean
-    default: false
-
 jobs:
   build:
     docker:
@@ -14,28 +8,43 @@ jobs:
       - checkout
       - run: echo "Building the project"
 
-  run-with-prompt:
+  call-endpoint:
     docker:
       - image: circleci/node:14
-    parameters:
-      user_choice:
-        type: boolean
-        default: false
     steps:
       - run:
-          name: Check user input and call endpoint
+          name: Call the Endpoint
           command: |
-            if [[ "<< parameters.user_choice >>" == "true" ]]; then
-              curl -X POST "https://your-endpoint.com/trigger"
-              echo "Endpoint called."
-            else
-              echo "Skipping endpoint call."
-            fi
+            curl -X POST "https://dummyjson.com/todos"
+            echo "Endpoint called."
+
+  skip-endpoint:
+    docker:
+      - image: circleci/node:14
+    steps:
+      - run:
+          name: Skipping the Endpoint Call
+          command: |
+            echo "User chose to skip calling the endpoint."
 
 workflows:
   version: 2
   run-build:
     jobs:
       - build
-      - run-with-prompt:
-          user_choice: << pipeline.parameters.run_endpoint >>
+      - hold:
+          type: approval
+      - call-endpoint:
+          requires:
+            - hold
+          filters:
+            branches:
+              only:
+                - main
+      - skip-endpoint:
+          requires:
+            - hold
+          filters:
+            branches:
+              only:
+                - main
