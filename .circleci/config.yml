@@ -15,7 +15,7 @@ jobs:
           name: Call the Endpoint
           command: |
             echo "User chose to call the endpoint."
-            curl "https://dummyjson.com/todos"
+            curl -X GET "https://dummyjson.com/todos"
 
   skip-endpoint:
     docker:
@@ -25,6 +25,12 @@ jobs:
           name: Skip the Endpoint Call
           command: |
             echo "User chose to skip calling the endpoint."
+
+  converge-paths:
+    docker:
+      - image: alpine:3.18
+    steps:
+      - run: echo "Converging the paths."
 
   continue-workflow:
     docker:
@@ -51,7 +57,10 @@ workflows:
       - skip-endpoint:
           requires:
             - skip-approval
-      - continue-workflow:
+      - converge-paths:
           requires:
             - call-endpoint
             - skip-endpoint
+      - continue-workflow:
+          requires:
+            - converge-paths
