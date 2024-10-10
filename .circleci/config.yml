@@ -3,9 +3,8 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: circleci/node:14
+      - image: alpine:3.18
     steps:
-      - checkout
       - run: echo "Building the project"
 
   call-endpoint:
@@ -15,24 +14,44 @@ jobs:
       - run:
           name: Call the Endpoint
           command: |
-            echo "Calling the endpoint..."
-            curl "https://dummyjson.com/todos"
+            echo "User chose to call the endpoint."
+            curl -X POST "https://your-endpoint.com/trigger"
 
   skip-endpoint:
     docker:
-      - image: curlimages/curl:7.87.0
+      - image: alpine:3.18
     steps:
       - run:
           name: Skip the Endpoint Call
-          command: echo "Skipping the endpoint call as no approval was given."
+          command: |
+            echo "User chose to skip calling the endpoint."
+
+  continue-workflow:
+    docker:
+      - image: alpine:3.18
+    steps:
+      - run: echo "Continuing with the next steps in the workflow..."
 
 workflows:
   version: 2
   run-build:
     jobs:
       - build
-      - hold-for-approval:
+      - call-approval:
           type: approval
+          requires:
+            - build
+      - skip-approval:
+          type: approval
+          requires:
+            - build
       - call-endpoint:
           requires:
-            - hold-for-approval
+            - call-approval
+      - skip-endpoint:
+          requires:
+            - skip-approval
+      - continue-workflow:
+          requires:
+            - call-endpoint
+            - skip-endpoint
