@@ -15,7 +15,7 @@ jobs:
           name: Call the Endpoint
           command: |
             echo "User chose to call the endpoint."
-            curl -X POST "https://your-endpoint.com/trigger"
+            curl "https://dummyjson.com/todos"
 
   skip-endpoint:
     docker:
