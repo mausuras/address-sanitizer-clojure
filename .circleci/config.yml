@@ -7,16 +7,6 @@ jobs:
     steps:
       - run: echo "Building the project"
 
-  call-endpoint:
-    docker:
-      - image: curlimages/curl:7.87.0
-    steps:
-      - run:
-          name: Call the Endpoint
-          command: |
-            echo "User chose to call the endpoint."
-            curl -X GET "https://dummyjson.com/todos"
-
   continue-workflow:
     docker:
       - image: alpine:3.18
@@ -38,9 +28,6 @@ workflows:
             - If you're unsure, consult with the team before approving.
           requires:
             - build
-      - call-endpoint:
-          requires:
-            - call-approval
       - continue-workflow:
           requires:
-            - call-endpoint
+            - call-approval
