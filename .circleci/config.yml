@@ -18,7 +18,7 @@ workflows:
   run-build:
     jobs:
       - build
-      - approval-step:
+      - approve-step:
           type: approval
           name: "Approval Required: Review Information"
           description: |
@@ -30,4 +30,4 @@ workflows:
             - build
       - continue-workflow:
           requires:
-            - approval-step
+            - approve-step
