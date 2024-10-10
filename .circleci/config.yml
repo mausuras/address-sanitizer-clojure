@@ -10,17 +10,17 @@ jobs:
 
   call-endpoint:
     docker:
-      - image: circleci/node:14
+      - image: curlimages/curl:7.87.0
     steps:
       - run:
           name: Call the Endpoint
           command: |
             echo "Calling the endpoint..."
-            curl -X POST "https://dummyjson.com/todos"
+            curl "https://dummyjson.com/todos"
 
   skip-endpoint:
     docker:
-      - image: circleci/node:14
+      - image: curlimages/curl:7.87.0
     steps:
       - run:
           name: Skip the Endpoint Call
