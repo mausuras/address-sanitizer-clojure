@@ -39,6 +39,9 @@ workflows:
       - call-endpoint:
           requires:
             - aprove-stop-tasks
+          filters:
+            branches:
+              ignore: "*"
       - deploy-to-prod:
           requires:
             - approve-step
