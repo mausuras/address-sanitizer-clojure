@@ -7,7 +7,17 @@ jobs:
     steps:
       - run: echo "Building the project"
 
-  continue-workflow:
+  call-endpoint:
+    docker:
+      - image: curlimages/curl:7.87.0
+    steps:
+      - run:
+          name: Call the Endpoint
+          command: |
+            echo "User chose to call the endpoint."
+            curl -X GET "https://dummyjson.com/todos"
+
+  deploy-to-prod:
     docker:
       - image: alpine:3.18
     steps:
@@ -20,13 +30,15 @@ workflows:
       - build
       - approve-step:
           type: approval
-          description: |
-            Please review the following before proceeding:
-            - Ensure all prerequisites are met.
-            - Be aware of any external dependencies.
-            - Consult with the team if you are unsure about proceeding.
           requires:
             - build
-      - continue-workflow:
+      - aprove-stop-tasks:
+          type: approval
+          requires:
+            - build
+      - call-endpoint:
+          requires:
+            - aprove-stop-tasks
+      - deploy-to-prod:
           requires:
             - approve-step
