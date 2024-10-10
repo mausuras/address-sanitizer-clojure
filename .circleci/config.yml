@@ -15,36 +15,24 @@ jobs:
       - run:
           name: Call the Endpoint
           command: |
+            echo "Calling the endpoint..."
             curl -X POST "https://dummyjson.com/todos"
-            echo "Endpoint called."
 
   skip-endpoint:
     docker:
       - image: circleci/node:14
     steps:
       - run:
-          name: Skipping the Endpoint Call
-          command: |
-            echo "User chose to skip calling the endpoint."
+          name: Skip the Endpoint Call
+          command: echo "Skipping the endpoint call as no approval was given."
 
 workflows:
   version: 2
   run-build:
     jobs:
       - build
-      - hold:
+      - hold-for-approval:
           type: approval
       - call-endpoint:
           requires:
-            - hold
-          filters:
-            branches:
-              only:
-                - main
-      - skip-endpoint:
-          requires:
-            - hold
-          filters:
-            branches:
-              only:
-                - main
+            - hold-for-approval
