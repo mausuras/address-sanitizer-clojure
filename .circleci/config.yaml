@@ -1,0 +1,34 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: circleci/node:14
+    steps:
+      - checkout
+      - run: echo "Building the project"
+
+  run-with-prompt:
+    docker:
+      - image: circleci/node:14
+    parameters:
+      user_choice:
+        type: boolean
+        default: false
+    steps:
+      - run:
+          name: Check user input and call endpoint
+          command: |
+            if [[ << parameters.user_choice >> == "true" ]]; then
+              echo "Endpoint called."
+            else
+              echo "Skipping endpoint call."
+            fi
+
+workflows:
+  version: 2
+  run-build:
+    jobs:
+      - build
+      - run-with-prompt:
+          user_choice: << pipeline.parameters.run_endpoint >>
