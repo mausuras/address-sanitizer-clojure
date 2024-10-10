@@ -18,16 +18,16 @@ workflows:
   run-build:
     jobs:
       - build
-      - call-approval:
+      - approval-step:
           type: approval
-          name: "Approval Required: API Call Awareness"
+          name: "Approval Required: Review Information"
           description: |
-            Please review before proceeding:
-            - This step might need to call an external endpoint.
-            - Make sure all prerequisites are met before proceeding.
-            - If you're unsure, consult with the team before approving.
+            Please review the following before proceeding:
+            - Ensure all prerequisites are met.
+            - Be aware of any external dependencies.
+            - Consult with the team if you are unsure about proceeding.
           requires:
             - build
       - continue-workflow:
           requires:
-            - call-approval
+            - approval-step
