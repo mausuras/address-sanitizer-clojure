@@ -17,21 +17,6 @@ jobs:
             echo "User chose to call the endpoint."
             curl -X GET "https://dummyjson.com/todos"
 
-  skip-endpoint:
-    docker:
-      - image: alpine:3.18
-    steps:
-      - run:
-          name: Skip the Endpoint Call
-          command: |
-            echo "User chose to skip calling the endpoint."
-
-  converge-paths:
-    docker:
-      - image: alpine:3.18
-    steps:
-      - run: echo "Converging the paths."
-
   continue-workflow:
     docker:
       - image: alpine:3.18
@@ -45,22 +30,17 @@ workflows:
       - build
       - call-approval:
           type: approval
-          requires:
-            - build
-      - skip-approval:
-          type: approval
+          name: "Approval Required: API Call Awareness"
+          description: |
+            Please review before proceeding:
+            - This step might need to call an external endpoint.
+            - Make sure all prerequisites are met before proceeding.
+            - If you're unsure, consult with the team before approving.
           requires:
             - build
       - call-endpoint:
           requires:
             - call-approval
-      - skip-endpoint:
-          requires:
-            - skip-approval
-      - converge-paths:
-          requires:
-            - call-endpoint
-            - skip-endpoint
       - continue-workflow:
           requires:
-            - converge-paths
+            - call-endpoint
