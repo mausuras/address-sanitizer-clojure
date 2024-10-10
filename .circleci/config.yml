@@ -1,5 +1,11 @@
 version: 2.1
 
+# Define pipeline parameters at the top level
+parameters:
+  run_endpoint:
+    type: boolean
+    default: false
+
 jobs:
   build:
     docker:
@@ -19,7 +25,7 @@ jobs:
       - run:
           name: Check user input and call endpoint
           command: |
-            if [[ << parameters.user_choice >> == "true" ]]; then
+            if [[ "<< parameters.user_choice >>" == "true" ]]; then
               curl -X POST "https://your-endpoint.com/trigger"
               echo "Endpoint called."
             else
